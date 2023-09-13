@@ -7,6 +7,9 @@ const gulpStylus = require('gulp-stylus');
 const gulpif = require('gulp-if');
 const gulpCleanCSS = require('gulp-clean-css');
 const del = require('delete');
+const plumber = require('gulp-plumber');
+const gulpImageMin = require('gulp-imagemin');
+const svgSprite = require('gulp-svg-sprite');
 
 const outputDir = 'docs';
 
@@ -15,6 +18,8 @@ const isProduction = process.env.NODE_ENV === 'production';
 const srcStylus = ['src/**/*.css', 'src/**/*.styl'];
 const srcPug = 'src/**/*.pug';
 const srcJS = 'src/**/*.js';
+const srcSVG = 'src/assets/*.svg';
+const srcImages = ['src/**/*.svg', 'src/**/*.jpg', 'src/**/*.gif', 'src/**/*.png'];
 
 function server() {
     return gulpConnect.server({
@@ -39,6 +44,24 @@ function stylus() {
         .pipe(gulpif(!isProduction, gulpConnect.reload()));
 }
 
+function svg() {
+    return gulp.src(srcSVG, { cwd: '' })
+        .pipe(plumber())
+        .pipe(svgSprite({
+            mode: {
+                css: {
+                    render: {
+                        css: true
+                    }
+                }
+            }
+        }))
+        .on('error', function(error) {
+            console.log(error)
+        })
+        .pipe(gulp.dest(outputDir));
+}
+
 function pug() {
     return gulp.src(srcPug)
         .pipe(gulpData(() => {
@@ -52,6 +75,13 @@ function pug() {
         .pipe(gulpif(!isProduction, gulpConnect.reload()));
 }
 
+function images() {
+    return gulp.src(srcImages)
+        .pipe(gulpif(isProduction, gulpImageMin()))
+        .pipe(gulp.dest(outputDir))
+        .pipe(gulpif(!isProduction, gulpConnect.reload()));
+}
+
 function js() {
     return gulp.src(srcJS)
         .pipe(gulpif(isProduction, gulpUglify()))
@@ -61,13 +91,16 @@ function js() {
 
 function watch() {
     gulp.watch(srcJS, gulp.series(js));
+    gulp.watch(srcSVG, gulp.series(svg));
     gulp.watch(srcStylus, gulp.series(stylus));
+    gulp.watch(srcImages, gulp.series(images));
     gulp.watch(srcPug, gulp.series(pug));
 }
 
 exports.default = gulp.parallel(
     watch,
     gulp.series(clean, js, pug, stylus, server)
+    // gulp.series(clean, js, svg, pug, stylus, images, server)
 );
 exports.server = server;
 exports.clean = clean;

@@ -1,5 +1,3 @@
-// const wonClass = 'puzzleWon'
-
 export function addWonClass(node, value) {
     setTimeout(() => {
         node.classList.add(value)

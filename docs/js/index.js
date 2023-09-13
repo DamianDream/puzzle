@@ -3,34 +3,39 @@ import { findCoordinatesByNumber } from './modules/findCoordinatesByNumber.js'
 import { isValidForSwap } from './modules/isValidForSwap.js'
 import { isWon } from './modules/isWon.js'
 import { addWonClass } from './modules/addWonClass.js'
+import  { setPositionItems } from './modules/setPositionItems.js'
 
 // Nodes
 const gameNode = document.querySelector('.game')
 const containerNode = document.querySelector('.puzzle')
 const itemNodes = Array.from(containerNode.querySelectorAll('.item'))
+const resetBtn = document.getElementById('reset')
+const shuffleBtn = document.getElementById('shuffle')
 
 // Variables
-const GAME_CANVAS_SIZE = 16
+const GAME_CANVAS_SIZE = itemNodes.length
 const countItems = GAME_CANVAS_SIZE
 const blankNumber = GAME_CANVAS_SIZE
+let matrixSize = 4
 
 // Hide last elementNode
 itemNodes[countItems -1].style.display = 'none'
 
 // POSITION
 let matrix = getMatrix(
-    itemNodes.map(item => Number(item.dataset.matrixId))
+    itemNodes.map(item => Number(item.dataset.matrixId)),
+    matrixSize
 )
 
-setPositionItems(matrix)
+setPositionItems(matrix, itemNodes)
 
-// SHUFFLE
+// SHUFFLE BTN
 const  maxShuffleCount = 100
 let timer;
 let shuffled = false
 const shuffledClassName = 'gameShuffle'
 
-document.getElementById('shuffle').addEventListener('click', () => {
+shuffleBtn.addEventListener('click', () => {
     let shuffleCount = 0
     clearInterval(timer)
 
@@ -38,7 +43,7 @@ document.getElementById('shuffle').addEventListener('click', () => {
 
     timer = setInterval(() => {
         randomSwap(matrix)
-        setPositionItems(matrix)
+        setPositionItems(matrix, itemNodes)
 
         gameNode.classList.add(shuffledClassName)
         shuffled = true
@@ -53,6 +58,14 @@ document.getElementById('shuffle').addEventListener('click', () => {
     }, 60)
 })
 
+// RESET BTN
+resetBtn.addEventListener('click', () => {
+    const sortArr = getMatrix(matrix.flat().sort((a,b) => a -b), matrixSize)
+    matrix = [...sortArr]
+    setPositionItems(matrix, itemNodes)
+})
+
+// Create array with exception coordinates
 let blokedCoords = null
 function randomSwap(matrix) {
     const blankCoords = findCoordinatesByNumber(blankNumber, matrix)
@@ -90,7 +103,7 @@ containerNode.addEventListener('click', (e) => {
 
     if (isValid) {
         swap(blankCoords, buttonCoords, matrix)
-        setPositionItems(matrix)
+        setPositionItems(matrix, itemNodes)
     }
 })
 
@@ -130,25 +143,8 @@ window.addEventListener('keydown', (e) => {
     }
 
     swap(blankCoords, buttonCoords, matrix)
-    setPositionItems(matrix)
+    setPositionItems(matrix, itemNodes)
 })
-
-/* Helpers */
-
-function setPositionItems(matrix) {
-    for(let y = 0; y < matrix.length; y++) {
-        for(let x = 0; x < matrix[y].length; x++){
-            const value = matrix[y][x]
-            const node = itemNodes[value -1]
-            setNodeStyles(node, x ,y)
-        }
-    }
-}
-
-function setNodeStyles(node, x, y) {
-    const shiftPs = 100;
-    node.style.transform = `translate3D(${x * shiftPs}%, ${y * shiftPs}%, 0)`
-}
 
 function swap(coords1, coords2, matrix) {
     const swapNumber = matrix[coords1.y][coords1.x]
