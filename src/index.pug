@@ -9,13 +9,15 @@ html(lang="ru")
 
         - var arr = new Array(16).fill(0).map((_item, index) => index + 1);
 
-        .puzzle(data-is-shuffled=false)
+        .game(data-is-shuffled=false)
 
-            .fifteen
+            .puzzle
                 each item in arr
                     button.item(data-matrix-id=item)
-                        span.itemVal= item
+                            span.itemVal= item
 
-            button.button#shuffle Mix
+            button.button#shuffle
+                .button__content
+                    p.button__text MIX
 
         script(src="/js/index.js" type="module")
