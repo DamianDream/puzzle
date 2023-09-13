@@ -1,15 +1,1 @@
-export function setPositionItems(matrix, arr) {
-
-    for(let y = 0; y < matrix.length; y++) {
-        for(let x = 0; x < matrix[y].length; x++){
-            const value = matrix[y][x]
-            const node = arr[value -1]
-            setNodeStyles(node, x ,y)
-        }
-    }
-}
-
-export function setNodeStyles(node, x, y) {
-    const shiftPs = 100;
-    node.style.transform = `translate3D(${x * shiftPs}%, ${y * shiftPs}%, 0)`
-}
+function setPositionItems(s,o){for(let e=0;e<s.length;e++)for(let t=0;t<s[e].length;t++)setNodeStyles(o[s[e][t]-1],t,e)}function setNodeStyles(t,e,s){t.style.transform=`translate3D(${100*e}%, ${100*s}%, 0)`}export{setPositionItems,setNodeStyles};

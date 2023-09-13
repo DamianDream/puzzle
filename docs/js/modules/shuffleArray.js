@@ -1,7 +1,1 @@
-// Alternative shuffle array method (could be impossible)
-function shuffleArray(arr) {
-    return arr
-        .map(value => ({ value, sort: Math.random() }))
-        .sort(( a, b ) => a.sort - b.sort)
-        .map(({ value }) => value)
-}
+function shuffleArray(r){return r.map(r=>({value:r,sort:Math.random()})).sort((r,a)=>r.sort-a.sort).map(({value:r})=>r)}

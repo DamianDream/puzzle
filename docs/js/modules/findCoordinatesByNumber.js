@@ -1,10 +1,1 @@
-export function findCoordinatesByNumber(number, matrix) {
-    for(let y = 0; y < matrix.length; y++) {
-        for(let x = 0; x < matrix[y].length; x++) {
-            if(matrix[y][x] === number){
-                return {x, y}
-            }
-        }
-    }
-    return null
-}
+function findCoordinatesByNumber(r,t){for(let n=0;n<t.length;n++)for(let e=0;e<t[n].length;e++)if(t[n][e]===r)return{x:e,y:n};return null}export{findCoordinatesByNumber};
