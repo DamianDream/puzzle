@@ -1,0 +1,21 @@
+doctype html
+html(lang="ru")
+    head
+        meta(charset="utf-8")
+        title Puzzle
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        link(rel="stylesheet" href="/css/index.css")
+    body
+
+        - var arr = new Array(16).fill(0).map((_item, index) => index + 1);
+
+        .puzzle(data-is-shuffled=false)
+
+            .fifteen
+                each item in arr
+                    button.item(data-matrix-id=item)
+                        span.itemVal= item
+
+            button.button#shuffle Mix
+
+        script(src="/js/index.js" type="module")
