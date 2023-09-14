@@ -1,4 +1,8 @@
-export function getMatrix(arr, matrixSize) {
+
+export function getMatrix(matrixSize) {
+    const itemNodes = Array.from(document.querySelectorAll('.item'))
+    let arr = itemNodes.map(item => Number(item.dataset.matrixId))
+
     let size = 0
     const matrix = []
 
@@ -18,6 +22,5 @@ export function getMatrix(arr, matrixSize) {
         matrix[y][x] = arr[i]
         x++
     }
-    console.table(matrix)
     return matrix
 }

@@ -1,4 +1,5 @@
-export function setPositionItems(matrix, arr) {
+export function setPositionItems(matrix) {
+    const arr = Array.from(document.querySelectorAll('.item'))
 
     for(let y = 0; y < matrix.length; y++) {
         for(let x = 0; x < matrix[y].length; x++){

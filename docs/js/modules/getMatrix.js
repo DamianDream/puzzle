@@ -1,1 +1,1 @@
-function getMatrix(e,o){let t=0;const r=[];for(;t<=o-1;)r.push([]),t++;let l=0,n=0;for(let t=0;t<e.length;t++)n>=o&&(l++,n=0),r[l][n]=e[t],n++;return console.table(r),r}export{getMatrix};
+function getMatrix(e){const t=Array.from(document.querySelectorAll(".item"));var r=t.map(t=>Number(t.dataset.matrixId));let o=0;const a=[];for(;o<=e-1;)a.push([]),o++;let l=0,n=0;for(let t=0;t<r.length;t++)n>=e&&(l++,n=0),a[l][n]=r[t],n++;return a}export{getMatrix};

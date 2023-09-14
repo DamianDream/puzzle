@@ -3,37 +3,56 @@ import { findCoordinatesByNumber } from './modules/findCoordinatesByNumber.js'
 import { isValidForSwap } from './modules/isValidForSwap.js'
 import { isWon } from './modules/isWon.js'
 import { addWonClass } from './modules/addWonClass.js'
-import  { setPositionItems } from './modules/setPositionItems.js'
+import { setPositionItems } from './modules/setPositionItems.js'
+import { createPuzzleNodes } from './modules/createPuzzleNodes.js'
+import { removeElementsFromDom } from './modules/removeElementsFromDom.js'
+import { swap } from './modules/swap.js'
+import { setPuzzleColor } from './modules/setPuzzleColor.js'
+import { setPuzzlesSize } from './modules/setPuzzlesSize.js'
 
 // Nodes
 const gameNode = document.querySelector('.game')
 const containerNode = document.querySelector('.puzzle')
-const itemNodes = Array.from(containerNode.querySelectorAll('.item'))
-const resetBtn = document.getElementById('reset')
-const shuffleBtn = document.getElementById('shuffle')
 
-// Variables
-const GAME_CANVAS_SIZE = itemNodes.length
-const countItems = GAME_CANVAS_SIZE
-const blankNumber = GAME_CANVAS_SIZE
-let matrixSize = 4
+let isGameSmall = false
+let matrixSize = null
+let puzzleSize = null
+let matrix = null
 
-// Hide last elementNode
-itemNodes[countItems -1].style.display = 'none'
+puzzleGameInit(16)
 
-// POSITION
-let matrix = getMatrix(
-    itemNodes.map(item => Number(item.dataset.matrixId)),
-    matrixSize
-)
+function puzzleGameInit(size) {
+    if(size < 16) isGameSmall = true
 
-setPositionItems(matrix, itemNodes)
+    if(!isGameSmall) {
+        matrixSize = 4
+        puzzleSize = 16
+    } else {
+        matrixSize = 3
+        puzzleSize = 9
+    }
+
+    createPuzzleNodes(puzzleSize, containerNode)
+    matrix = getMatrix(matrixSize)
+    setPositionItems(matrix)
+    setPuzzlesSize(isGameSmall)
+    setPuzzleColor()
+}
+
+
+function removePuzzleItems(){
+    const itemNodes = Array.from(document.querySelectorAll('.item'))
+    removeElementsFromDom(itemNodes)
+}
 
 // SHUFFLE BTN
-const  maxShuffleCount = 100
 let timer;
 let shuffled = false
 const shuffledClassName = 'gameShuffle'
+const maxShuffleCount = 20
+const shuffleSpeed = 120
+
+const shuffleBtn = document.getElementById('shuffle')
 
 shuffleBtn.addEventListener('click', () => {
     let shuffleCount = 0
@@ -43,7 +62,7 @@ shuffleBtn.addEventListener('click', () => {
 
     timer = setInterval(() => {
         randomSwap(matrix)
-        setPositionItems(matrix, itemNodes)
+        setPositionItems(matrix)
 
         gameNode.classList.add(shuffledClassName)
         shuffled = true
@@ -55,20 +74,33 @@ shuffleBtn.addEventListener('click', () => {
             gameNode.classList.remove(shuffledClassName)
             shuffled = false
         }
-    }, 60)
+    }, shuffleSpeed)
 })
 
 // RESET BTN
+const resetBtn = document.getElementById('reset')
 resetBtn.addEventListener('click', () => {
-    const sortArr = getMatrix(matrix.flat().sort((a,b) => a -b), matrixSize)
-    matrix = [...sortArr]
-    setPositionItems(matrix, itemNodes)
+    matrix = getMatrix(matrixSize)
+    setPositionItems(matrix)
+})
+
+// SMALL
+const sizeBtn = document.getElementById('small')
+sizeBtn.addEventListener('click', () => {
+    removePuzzleItems()
+    puzzleGameInit(9)
+})
+
+// COLOR
+const colorBtn = document.getElementById('color')
+colorBtn.addEventListener('click', () => {
+    setPuzzleColor()
 })
 
 // Create array with exception coordinates
 let blokedCoords = null
 function randomSwap(matrix) {
-    const blankCoords = findCoordinatesByNumber(blankNumber, matrix)
+    const blankCoords = findCoordinatesByNumber(puzzleSize, matrix)
     const validCoords = findValidCoords(blankCoords, matrix, blokedCoords)
     const swapCoords = validCoords[Math.floor(Math.random() * validCoords.length)]
     swap(blankCoords, swapCoords, matrix)
@@ -97,24 +129,18 @@ containerNode.addEventListener('click', (e) => {
 
     const buttonNumber = Number(buttonNode.dataset.matrixId)
     const buttonCoords = findCoordinatesByNumber(buttonNumber, matrix)
-    const blankCoords = findCoordinatesByNumber(blankNumber, matrix)
+    const blankCoords = findCoordinatesByNumber(puzzleSize, matrix)
 
     const isValid = isValidForSwap(buttonCoords, blankCoords)
 
     if (isValid) {
-        swap(blankCoords, buttonCoords, matrix)
-        setPositionItems(matrix, itemNodes)
+        swapAndCheck(blankCoords, buttonCoords, matrix)
+        setPositionItems(matrix)
     }
 })
 
-// Change position by keydown
-window.addEventListener('keydown', (e) => {
-    if(shuffled) return
-
-    if(!e.key.includes('Arrow')) {
-        return
-    }
-    const blankCoords = findCoordinatesByNumber(blankNumber, matrix)
+function keydownHandler(e, puzzleSize, matrix) {
+    const blankCoords = findCoordinatesByNumber(puzzleSize, matrix)
     const buttonCoords = {
         x: blankCoords.x,
         y: blankCoords.y
@@ -142,14 +168,22 @@ window.addEventListener('keydown', (e) => {
         return
     }
 
-    swap(blankCoords, buttonCoords, matrix)
-    setPositionItems(matrix, itemNodes)
+    swapAndCheck(blankCoords, buttonCoords, matrix)
+    setPositionItems(matrix)
+}
+
+// Change position by keydown
+window.addEventListener('keydown', (e) => {
+    if(shuffled) return
+
+    if(!e.key.includes('Arrow')) {
+        return
+    }
+    keydownHandler(e, puzzleSize, matrix)
 })
 
-function swap(coords1, coords2, matrix) {
-    const swapNumber = matrix[coords1.y][coords1.x]
-    matrix[coords1.y][coords1.x] = matrix[coords2.y][coords2.x]
-    matrix[coords2.y][coords2.x] = swapNumber
+function swapAndCheck(coords1, coords2, matrix) {
+    swap(coords1, coords2, matrix)
 
     if (isWon(matrix)) {
         addWonClass(containerNode, 'puzzleWon')

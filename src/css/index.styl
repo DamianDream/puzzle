@@ -11,10 +11,9 @@ body
   background: -webkit-linear-gradient(to right, #FFFFFF, #ECE9E6)
   background: linear-gradient(to right, #FFFFFF, #ECE9E6)
 
-
 .game
   max-width: 500px
-  padding: 2rem
+  padding: 1rem
   margin: 0 auto
   text-align: center
   user-select: none
@@ -59,66 +58,84 @@ body
       color: whitesmoke
       font-size: 1.6rem
       font-weight: bold
-      background: #00b09b
-      background: linear-gradient(to right, #00b09b, #22cbba)
+      background-color: tomato
 
       &:hover
         width: 92%
         height: 92%
 
-
   &Won
     .item
       filter: brightness(120%)
 
-.control-container
-  width: 100%
-  display: flex
-  justify-content: space-evenly
-  padding: 1rem
+.button
+  font-size: 14px
+  padding: 0
+  width: 4rem
+  height: 4rem
+  border: 2px solid #c0c0c0
+  outline: none
+  background-color: #f4f5f6
+  border-radius: 10px
+  box-shadow:  -3px -10px 17px #ffffff, -3px -5px 7px #ffffff, -8px 0px 12px #ffffff, 2px 4px 8px rgba(0,0,0,0.2)
+  transition: .13s ease-in-out
+  cursor: pointer
 
-  .button
-    font-size: 14px
-    padding: 0
-    width: 4rem
-    height: 4rem
-    border: 2px solid #c0c0c0
-    outline: none
-    background-color: #f4f5f6
-    border-radius: 10px
-    box-shadow:  -3px -10px 17px #ffffff, -3px -5px 7px #ffffff, -8px 0px 12px #ffffff, 2px 4px 8px rgba(0,0,0,0.2)
-    transition: .13s ease-in-out
-    cursor: pointer
-
-    &:active
+  &:active
+    box-shadow: none
+    .buttonContent
       box-shadow: none
-      .buttonContent
-        box-shadow: none
-      .buttonText
-        transform: translate3d(0px, 0px, 0px)
+    .buttonText
+      transform: translate3d(0px, 0px, 0px)
 
-    &Content
-      position: relative
-      display: grid
-      place-content: center
-      width: 100%
-      height: 100%
-      box-shadow: inset 0px -8px 0px #dddddd, 0px -8px 0px #f4f5f6
-      border-radius: 10px
-      transition: .12s ease-in-out
-      z-index: 1
+  &Content
+    position: relative
+    display: grid
+    place-content: center
+    width: 100%
+    height: 100%
+    box-shadow: inset 0px -8px 0px #dddddd, 0px -8px 0px #f4f5f6
+    border-radius: 10px
+    transition: .12s ease-in-out
+    z-index: 1
+
+  &Text
+    transform:translate3d(0px, -4px, 0px)
+    font-size: 1rem
+    font-weight: bold
+    background-color: #888888
+    color: tomato
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.4)
+    -webkit-background-clip: text
+    -moz-background-clip: text
+    background-clip: text
+    transition: all .12s ease-in-out
+
+    &:hover
+      color: #ff3a15
+
+.utils
+  display: grid
+
+  &Controls
+    width: 100%
+    display: flex
+    justify-content: space-evenly
+    padding: 1rem
+
+  &Description
+    display: flex
+    flex-direction column
 
     &Text
-      transform:translate3d(0px, -4px, 0px)
-      font-size: 1rem
-      font-weight: bold
-      background-color: #888888
-      color: tomato
-      text-shadow: 1px 1px 2px rgba(255,255,255,0.4)
-      -webkit-background-clip: text
-      -moz-background-clip: text
-      background-clip: text
-      transition: all .12s ease-in-out
+      color: #adadad
+      font: .9rem Arial, sans-serif
 
-      &:hover
-        color: #ff3a15
+    &Note
+      display: flex
+      align-items: center
+      gap: .6rem
+
+// Utility class
+.border
+  border: 1px solid red

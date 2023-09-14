@@ -1,1 +1,1 @@
-function setPositionItems(s,o){for(let e=0;e<s.length;e++)for(let t=0;t<s[e].length;t++)setNodeStyles(o[s[e][t]-1],t,e)}function setNodeStyles(t,e,s){t.style.transform=`translate3D(${100*e}%, ${100*s}%, 0)`}export{setPositionItems,setNodeStyles};
+function setPositionItems(o){var s=Array.from(document.querySelectorAll(".item"));for(let e=0;e<o.length;e++)for(let t=0;t<o[e].length;t++)setNodeStyles(s[o[e][t]-1],t,e)}function setNodeStyles(t,e,o){t.style.transform=`translate3D(${100*e}%, ${100*o}%, 0)`}export{setPositionItems,setNodeStyles};

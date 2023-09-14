@@ -1,0 +1,1 @@
+function setPuzzlesSize(e){if(e){const t=Array.from(document.querySelectorAll(".item")),i=e?"33.3%":"25%";t.forEach(e=>{e.style.width=i,e.style.height=i})}}export{setPuzzlesSize};

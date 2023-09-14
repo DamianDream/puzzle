@@ -1,0 +1,1 @@
+function removeElementsFromDom(e){e.forEach(e=>{e.remove()})}export{removeElementsFromDom};

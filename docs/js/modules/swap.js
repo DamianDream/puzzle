@@ -1,0 +1,1 @@
+function swap(x,y,a){var p=a[x.y][x.x];a[x.y][x.x]=a[y.y][y.x],a[y.y][y.x]=p}export{swap};
