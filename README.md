@@ -10,5 +10,5 @@ In this project based on such listed below tech:
 - for JavaScript was used `JavaScript` 😁
 - as task-runner was `Gulp` <br> link: [gulpjs.com](https://gulpjs.com/)
 
-Gif demo:
+
 ![puzzle_game_demo.gif](puzzle_game_demo.gif)
