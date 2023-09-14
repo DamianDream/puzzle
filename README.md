@@ -2,7 +2,7 @@ PUZZLE Game
 ===
 GitHub pages: [Demo Link](https://damiandream.github.io/puzzle/)
 
-![screenshot.jpg](screenshot.jpg)
+![puzzle_game_demo.gif](puzzle_game_demo.gif)
 
 In this project based on such listed below tech: 
 - for HTML was used `PUG` <br> link: [pughtml.com](https://pughtml.com/) 😵‍💫
