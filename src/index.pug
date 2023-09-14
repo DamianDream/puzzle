@@ -7,18 +7,8 @@ html(lang="ru")
         meta(name="viewport" content="width=device-width, initial-scale=1.0")
         link(rel="stylesheet" href="./css/index.css")
     body
-
-        - var arr = new Array(16).fill(0).map((_item, index) => index + 1);
-
         .game(data-is-shuffled=false)
-
-            .game-switch
-
             .puzzle
-                 // each item in arr
-                 //     button.item(data-matrix-id=item)
-                 //             span.itemVal= item
-
             .utils
                 .utilsControls
                     button.button#shuffle
@@ -52,5 +42,13 @@ html(lang="ru")
                     span.utilsDescriptionNote
                         span <svg fill="#adadad" width="24px" height="24px" viewBox="0 -2 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M27.1 14.313V5.396L24.158 8.34c-2.33-2.325-5.033-3.503-8.11-3.503C9.902 4.837 4.901 9.847 4.899 16c.001 6.152 5.003 11.158 11.15 11.16 4.276 0 9.369-2.227 10.836-8.478l.028-.122h-3.23l-.022.068c-1.078 3.242-4.138 5.421-7.613 5.421a8 8 0 0 1-5.691-2.359A7.993 7.993 0 0 1 8 16.001c0-4.438 3.611-8.049 8.05-8.049 2.069 0 3.638.58 5.924 2.573l-3.792 3.789H27.1z"/></svg>
                         p.utilsDescriptionText - Restart
-
+        .signature
+            .signatureLink
+                span find out more
+                span
+                    <svg width="24px" height="24px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M7.976 0A7.977 7.977 0 000 7.976c0 3.522 2.3 6.507 5.431 7.584.392.049.538-.196.538-.392v-1.37c-2.201.49-2.69-1.076-2.69-1.076-.343-.93-.881-1.175-.881-1.175-.734-.489.048-.489.048-.489.783.049 1.224.832 1.224.832.734 1.223 1.859.88 2.3.685.048-.538.293-.88.489-1.076-1.762-.196-3.621-.881-3.621-3.964 0-.88.293-1.566.832-2.153-.05-.147-.343-.978.098-2.055 0 0 .685-.196 2.201.832.636-.196 1.322-.245 2.007-.245s1.37.098 2.006.245c1.517-1.027 2.202-.832 2.202-.832.44 1.077.146 1.908.097 2.104a3.16 3.16 0 01.832 2.153c0 3.083-1.86 3.719-3.62 3.915.293.244.538.733.538 1.467v2.202c0 .196.146.44.538.392A7.984 7.984 0 0016 7.976C15.951 3.572 12.38 0 7.976 0z" fill="#adadad"/>
+                    </svg>
+                span
+                    a(href='https://github.com/DamianDream') Dima Batalshikov
         script(src="./js/index.js" type="module")
