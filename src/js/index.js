@@ -49,7 +49,7 @@ function removePuzzleItems(){
 let timer;
 let shuffled = false
 const shuffledClassName = 'gameShuffle'
-const maxShuffleCount = 20
+const maxShuffleCount = (isGameSmall) ? 20 : 100
 const shuffleSpeed = 120
 
 const shuffleBtn = document.getElementById('shuffle')
