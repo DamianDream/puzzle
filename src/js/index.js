@@ -13,23 +13,32 @@ import { setPuzzlesSize } from './modules/setPuzzlesSize.js'
 // Nodes
 const gameNode = document.querySelector('.game')
 const containerNode = document.querySelector('.puzzle')
+const resetBtn = document.getElementById('reset')
+const shuffleBtn = document.getElementById('shuffle')
+const sizeBtn = document.getElementById('size')
+const colorBtn = document.getElementById('color')
 
 let isGameSmall = false
 let matrixSize = null
 let puzzleSize = null
 let matrix = null
+let maxShuffleCount = null
+let shuffleSpeed = null
 
-puzzleGameInit(16)
+puzzleGameInit()
 
-function puzzleGameInit(size) {
-    if(size < 16) isGameSmall = true
+function puzzleGameInit() {
 
     if(!isGameSmall) {
         matrixSize = 4
         puzzleSize = 16
+        maxShuffleCount = 80
+        shuffleSpeed = 80
     } else {
         matrixSize = 3
         puzzleSize = 9
+        maxShuffleCount = 20
+        shuffleSpeed = 120
     }
 
     createPuzzleNodes(puzzleSize, containerNode)
@@ -38,7 +47,6 @@ function puzzleGameInit(size) {
     setPuzzlesSize(isGameSmall)
     setPuzzleColor()
 }
-
 
 function removePuzzleItems(){
     const itemNodes = Array.from(document.querySelectorAll('.item'))
@@ -49,10 +57,6 @@ function removePuzzleItems(){
 let timer;
 let shuffled = false
 const shuffledClassName = 'gameShuffle'
-const maxShuffleCount = (isGameSmall) ? 20 : 100
-const shuffleSpeed = 120
-
-const shuffleBtn = document.getElementById('shuffle')
 
 shuffleBtn.addEventListener('click', () => {
     let shuffleCount = 0
@@ -78,21 +82,31 @@ shuffleBtn.addEventListener('click', () => {
 })
 
 // RESET BTN
-const resetBtn = document.getElementById('reset')
 resetBtn.addEventListener('click', () => {
     matrix = getMatrix(matrixSize)
     setPositionItems(matrix)
 })
 
 // SMALL
-const sizeBtn = document.getElementById('small')
-sizeBtn.addEventListener('click', () => {
+function changeInnerHtmlText(e) {
+    let innerHTML
+
+    if(isGameSmall) {
+        innerHTML = "3x3"
+    } else {
+        innerHTML = "4x4"
+    }
+    e.target.firstChild.innerHTML = innerHTML
+}
+
+sizeBtn.addEventListener('click', (e) => {
+    changeInnerHtmlText(e)
+    isGameSmall = !isGameSmall
     removePuzzleItems()
-    puzzleGameInit(9)
+    puzzleGameInit()
 })
 
 // COLOR
-const colorBtn = document.getElementById('color')
 colorBtn.addEventListener('click', () => {
     setPuzzleColor()
 })
