@@ -1,1 +1,18 @@
-function getRandomIntInclusive(t,o){return t=Math.ceil(t),o=Math.floor(o),Math.floor(Math.random()*(o-t+1)+t)}function setPuzzleColor(){const o=getRandomIntInclusive(0,360),t=Array.from(document.querySelectorAll(".itemVal")),e=Math.trunc(70/t.length);let l=96;t.forEach(t=>{t.style.backgroundColor=`hsla(${o}, ${l}%, 40%)`,l-=Math.floor(e)})}export{getRandomIntInclusive,setPuzzleColor};
+export function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+export function setPuzzleColor() {
+    const hue = getRandomIntInclusive(0, 360)
+
+    const itemNodes = Array.from(document.querySelectorAll('.itemVal'))
+    const decrement = Math.trunc(70 / itemNodes.length)
+    let saturation = 96
+
+    itemNodes.forEach(item => {
+        item.style.backgroundColor = `hsla(${hue}, ${saturation}%, 40%)`
+        saturation -= Math.floor(decrement)
+    })
+}

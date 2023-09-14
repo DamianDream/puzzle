@@ -1,1 +1,9 @@
-function addWonClass(s,e){setTimeout(()=>{s.classList.add(e),setTimeout(()=>{s.classList.remove(e)},1e3)},200)}export{addWonClass};
+export function addWonClass(node, value) {
+    setTimeout(() => {
+        node.classList.add(value)
+
+        setTimeout(() => {
+            node.classList.remove(value)
+        }, 1000)
+    }, 200)
+}

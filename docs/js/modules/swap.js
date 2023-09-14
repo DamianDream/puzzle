@@ -1,1 +1,5 @@
-function swap(x,y,a){var p=a[x.y][x.x];a[x.y][x.x]=a[y.y][y.x],a[y.y][y.x]=p}export{swap};
+export function swap(coords1, coords2, matrix) {
+    const swapNumber = matrix[coords1.y][coords1.x]
+    matrix[coords1.y][coords1.x] = matrix[coords2.y][coords2.x]
+    matrix[coords2.y][coords2.x] = swapNumber
+}

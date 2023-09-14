@@ -1,1 +1,5 @@
-function removeElementsFromDom(e){e.forEach(e=>{e.remove()})}export{removeElementsFromDom};
+export function removeElementsFromDom(elements) {
+    elements.forEach(el => {
+        el.remove()
+    })
+}

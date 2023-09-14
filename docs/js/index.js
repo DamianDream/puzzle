@@ -1,1 +1,205 @@
-import{getMatrix}from"./modules/getMatrix.js";import{findCoordinatesByNumber}from"./modules/findCoordinatesByNumber.js";import{isValidForSwap}from"./modules/isValidForSwap.js";import{isWon}from"./modules/isWon.js";import{addWonClass}from"./modules/addWonClass.js";import{setPositionItems}from"./modules/setPositionItems.js";import{createPuzzleNodes}from"./modules/createPuzzleNodes.js";import{removeElementsFromDom}from"./modules/removeElementsFromDom.js";import{swap}from"./modules/swap.js";import{setPuzzleColor}from"./modules/setPuzzleColor.js";import{setPuzzlesSize}from"./modules/setPuzzlesSize.js";const gameNode=document.querySelector(".game"),containerNode=document.querySelector(".puzzle"),resetBtn=document.getElementById("reset"),shuffleBtn=document.getElementById("shuffle"),sizeBtn=document.getElementById("size"),colorBtn=document.getElementById("color");let isGameSmall=!1,matrixSize=null,puzzleSize=null,matrix=null,maxShuffleCount=null,shuffleSpeed=null;function puzzleGameInit(){shuffleSpeed=isGameSmall?(matrixSize=3,puzzleSize=9,maxShuffleCount=20,120):(matrixSize=4,puzzleSize=16,maxShuffleCount=80),createPuzzleNodes(puzzleSize,containerNode),matrix=getMatrix(matrixSize),setPositionItems(matrix),setPuzzlesSize(isGameSmall),setPuzzleColor()}function removePuzzleItems(){var e=Array.from(document.querySelectorAll(".item"));removeElementsFromDom(e)}puzzleGameInit();let timer,shuffled=!1;const shuffledClassName="gameShuffle";function changeInnerHtmlText(e){let t;t=isGameSmall?"3x3":"4x4",e.target.firstChild.innerHTML=t}shuffleBtn.addEventListener("click",()=>{let e=0;clearInterval(timer),shuffled||(timer=setInterval(()=>{randomSwap(matrix),setPositionItems(matrix),gameNode.classList.add(shuffledClassName),shuffled=!0,e+=1,e>=maxShuffleCount&&(clearInterval(timer),gameNode.classList.remove(shuffledClassName),shuffled=!1)},shuffleSpeed))}),resetBtn.addEventListener("click",()=>{matrix=getMatrix(matrixSize),setPositionItems(matrix)}),sizeBtn.addEventListener("click",e=>{changeInnerHtmlText(e),isGameSmall=!isGameSmall,removePuzzleItems(),puzzleGameInit()}),colorBtn.addEventListener("click",()=>{setPuzzleColor()});let blokedCoords=null;function randomSwap(e){var t=findCoordinatesByNumber(puzzleSize,e),o=findValidCoords(t,e,blokedCoords),o=o[Math.floor(Math.random()*o.length)];swap(t,o,e),blokedCoords=t}function findValidCoords(o,s,l){const r=[];for(let t=0;t<s.length;t++)for(let e=0;e<s[t].length;e++)isValidForSwap({x:e,y:t},o)&&(l&&l.x===e&&l.y===t||r.push({x:e,y:t}));return r}function keydownHandler(e,t,o){var s=findCoordinatesByNumber(t,o);const l={x:s.x,y:s.y};t=e.key.split("Arrow")[1].toLowerCase(),e=o.length;switch(t){case"up":l.y+=1;break;case"down":--l.y;break;case"left":l.x+=1;break;case"right":--l.x}l.y>=e||l.y<0||l.x>=e||l.x<0||(swapAndCheck(s,l,o),setPositionItems(o))}function swapAndCheck(e,t,o){swap(e,t,o),isWon(o)&&addWonClass(containerNode,"puzzleWon")}containerNode.addEventListener("click",e=>{var t=e.target.closest("button");t&&(e=Number(t.dataset.matrixId),t=findCoordinatesByNumber(e,matrix),e=findCoordinatesByNumber(puzzleSize,matrix),isValidForSwap(t,e)&&(swapAndCheck(e,t,matrix),setPositionItems(matrix)))}),window.addEventListener("keydown",e=>{shuffled||e.key.includes("Arrow")&&keydownHandler(e,puzzleSize,matrix)});
+import { getMatrix } from './modules/getMatrix.js'
+import { findCoordinatesByNumber } from './modules/findCoordinatesByNumber.js'
+import { isValidForSwap } from './modules/isValidForSwap.js'
+import { isWon } from './modules/isWon.js'
+import { addWonClass } from './modules/addWonClass.js'
+import { setPositionItems } from './modules/setPositionItems.js'
+import { createPuzzleNodes } from './modules/createPuzzleNodes.js'
+import { removeElementsFromDom } from './modules/removeElementsFromDom.js'
+import { swap } from './modules/swap.js'
+import { setPuzzleColor } from './modules/setPuzzleColor.js'
+import { setPuzzlesSize } from './modules/setPuzzlesSize.js'
+
+// Nodes
+const gameNode = document.querySelector('.game')
+const containerNode = document.querySelector('.puzzle')
+const resetBtn = document.getElementById('reset')
+const shuffleBtn = document.getElementById('shuffle')
+const sizeBtn = document.getElementById('size')
+const colorBtn = document.getElementById('color')
+
+let isGameSmall = false
+let matrixSize = null
+let puzzleSize = null
+let matrix = null
+let maxShuffleCount = null
+let shuffleSpeed = null
+
+puzzleGameInit()
+
+function puzzleGameInit() {
+
+    if(!isGameSmall) {
+        matrixSize = 4
+        puzzleSize = 16
+        maxShuffleCount = 80
+        shuffleSpeed = 80
+    } else {
+        matrixSize = 3
+        puzzleSize = 9
+        maxShuffleCount = 20
+        shuffleSpeed = 120
+    }
+
+    createPuzzleNodes(puzzleSize, containerNode)
+    matrix = getMatrix(matrixSize)
+    setPositionItems(matrix)
+    setPuzzlesSize(isGameSmall)
+    setPuzzleColor()
+}
+
+function removePuzzleItems(){
+    const itemNodes = Array.from(document.querySelectorAll('.item'))
+    removeElementsFromDom(itemNodes)
+}
+
+// SHUFFLE BTN
+let timer;
+let shuffled = false
+const shuffledClassName = 'gameShuffle'
+
+shuffleBtn.addEventListener('click', () => {
+    let shuffleCount = 0
+    clearInterval(timer)
+
+    if(shuffled) return
+
+    timer = setInterval(() => {
+        randomSwap(matrix)
+        setPositionItems(matrix)
+
+        gameNode.classList.add(shuffledClassName)
+        shuffled = true
+
+        shuffleCount += 1
+
+        if(shuffleCount >= maxShuffleCount) {
+            clearInterval(timer)
+            gameNode.classList.remove(shuffledClassName)
+            shuffled = false
+        }
+    }, shuffleSpeed)
+})
+
+// RESET BTN
+resetBtn.addEventListener('click', () => {
+    matrix = getMatrix(matrixSize)
+    setPositionItems(matrix)
+})
+
+// SMALL
+function changeInnerHtmlText(e) {
+    let innerHTML
+
+    if(isGameSmall) {
+        innerHTML = "3x3"
+    } else {
+        innerHTML = "4x4"
+    }
+    e.target.firstChild.innerHTML = innerHTML
+}
+
+sizeBtn.addEventListener('click', (e) => {
+    changeInnerHtmlText(e)
+    isGameSmall = !isGameSmall
+    removePuzzleItems()
+    puzzleGameInit()
+})
+
+// COLOR
+colorBtn.addEventListener('click', () => {
+    setPuzzleColor()
+})
+
+// Create array with exception coordinates
+let blokedCoords = null
+function randomSwap(matrix) {
+    const blankCoords = findCoordinatesByNumber(puzzleSize, matrix)
+    const validCoords = findValidCoords(blankCoords, matrix, blokedCoords)
+    const swapCoords = validCoords[Math.floor(Math.random() * validCoords.length)]
+    swap(blankCoords, swapCoords, matrix)
+    blokedCoords = blankCoords
+}
+
+function findValidCoords(blankCoords, matrix, blokedCoords) {
+    const validCoords = []
+
+    for(let y = 0; y < matrix.length; y++) {
+        for(let x = 0; x < matrix[y].length; x++) {
+            if(isValidForSwap({x, y}, blankCoords)) {
+                if(!blokedCoords || !(blokedCoords.x === x && blokedCoords.y === y)) {
+                    validCoords.push({x, y})
+                }
+            }
+        }
+    }
+    return validCoords
+}
+
+// Change position by click
+containerNode.addEventListener('click', (e) => {
+    const buttonNode = e.target.closest('button')
+    if (!buttonNode) return
+
+    const buttonNumber = Number(buttonNode.dataset.matrixId)
+    const buttonCoords = findCoordinatesByNumber(buttonNumber, matrix)
+    const blankCoords = findCoordinatesByNumber(puzzleSize, matrix)
+
+    const isValid = isValidForSwap(buttonCoords, blankCoords)
+
+    if (isValid) {
+        swapAndCheck(blankCoords, buttonCoords, matrix)
+        setPositionItems(matrix)
+    }
+})
+
+function keydownHandler(e, puzzleSize, matrix) {
+    const blankCoords = findCoordinatesByNumber(puzzleSize, matrix)
+    const buttonCoords = {
+        x: blankCoords.x,
+        y: blankCoords.y
+    }
+    const direction = e.key.split('Arrow')[1].toLowerCase()
+    const maxIndexMatrix = matrix.length
+
+    switch(direction) {
+        case "up":
+            buttonCoords.y +=1
+            break
+        case "down":
+            buttonCoords.y -=1
+            break
+        case "left":
+            buttonCoords.x +=1
+            break
+        case "right":
+            buttonCoords.x -=1
+            break
+    }
+
+    if(buttonCoords.y >= maxIndexMatrix || buttonCoords.y < 0 ||
+        buttonCoords.x >= maxIndexMatrix || buttonCoords.x < 0) {
+        return
+    }
+
+    swapAndCheck(blankCoords, buttonCoords, matrix)
+    setPositionItems(matrix)
+}
+
+// Change position by keydown
+window.addEventListener('keydown', (e) => {
+    if(shuffled) return
+
+    if(!e.key.includes('Arrow')) {
+        return
+    }
+    keydownHandler(e, puzzleSize, matrix)
+})
+
+function swapAndCheck(coords1, coords2, matrix) {
+    swap(coords1, coords2, matrix)
+
+    if (isWon(matrix)) {
+        addWonClass(containerNode, 'puzzleWon')
+    }
+}
